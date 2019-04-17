@@ -1,0 +1,39 @@
+version: "3"
+services:
+  nginx:
+    image: leekachung/lkc-nginx
+    volumes:
+      - ./conf/nginx:/etc/nginx/conf.d
+      - ./www:/www
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+  php:
+    image: leekachung/lkc-php-fpm
+    volumes:
+      - ./www:/www
+    depends_on:
+      - mysql
+      - redis
+    expose:
+      - "9000"
+  mysql:
+    image: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: your_password
+        MYSQL_DATABASE: your_database
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    expose:
+      - "3306"
+    ports:
+      - "3113:3306"
+  redis:
+    image: redis
+    volumes:
+      - ./data/redis:/data
+    expose:
+      - "6379"
+    ports:
+      - "6313:6379"
